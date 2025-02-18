@@ -53,8 +53,8 @@
                     method: "GET",
                     headers: { "Content-Type": "application/json" }
                 });
-                let result = await response.text();
-                document.getElementById('apiResponse').textContent = JSON.stringify(response);
+                let result = (await response.json()) || {};
+                document.getElementById('apiResponse').textContent = (result.comments && result.comments[0] && result.comments[0].body) ? `API Test result: ${result.comments[0].body}` : 'No API result';
             } else {
                 document.getElementById('apiResponse').textContent = 'Please, select a text.';
             }
