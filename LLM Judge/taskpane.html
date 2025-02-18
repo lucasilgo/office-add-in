@@ -38,6 +38,8 @@
             let selection = context.document.getSelection();
             selection.load("text");
 
+            await context.sync();
+
             const selectedText = selection.text;
 
             document.getElementById('selectedText').textContent(selectedText || '');
@@ -52,8 +54,6 @@
             } else {
                 document.getElementById('apiResponse').textContent('Please, select a text.')
             }
-
-            return context.sync();
         });
     }
 </script>
