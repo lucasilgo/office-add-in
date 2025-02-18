@@ -16,6 +16,10 @@
             font-size: 20px;
             border: 2px solid #000;
         }
+        #selectedText, #apiResponse {
+            margin-top: 10px;
+            padding: 5px 0px;
+        }
     </style>
 </head>
 
@@ -42,7 +46,7 @@
 
             const selectedText = selection.text;
 
-            document.getElementById('selectedText').textContent(selectedText || '');
+            document.getElementById('selectedText').textContent = selectedText || '';
 
             if (selection.text.trim().length > 0) {
                 let response = await fetch("https://dummyjson.com/comments", {
@@ -50,9 +54,9 @@
                     headers: { "Content-Type": "application/json" }
                 });
                 let result = await response.text();
-                document.getElementById('apiResponse').textContent(JSON.stringify(response));
+                document.getElementById('apiResponse').textContent = JSON.stringify(response);
             } else {
-                document.getElementById('apiResponse').textContent('Please, select a text.')
+                document.getElementById('apiResponse').textContent = 'Please, select a text.';
             }
         });
     }
