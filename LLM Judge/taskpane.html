@@ -4,28 +4,55 @@
 <head>
     <!-- Office JavaScript API -->
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+    <style>
+        #analyzeBtn {
+            border-radius: 5px;
+            width: 100%;
+            height: 40px;
+            background-color: #6a399c;
+            color: #fff;
+            font-weight: bold;
+            font-size: 20px;
+            border: 2px solid #000;
+        }
+    </style>
 </head>
 
 <body>
-    <p>This add-in will insert the text 'Hello world!'.</p>
-    <button id="helloButton">Say hello</button>
+    <p>Select a text in the document, and click on the following button to analyze the text.</p>
+    <button id="analyzeBtn">Analyze</button>
+    <div id="selectedText"></div>
+    <div id="apiResponse"></div>
 </body>
 
 <script>
     Office.onReady((info) => {
-        // Check that we loaded into Word
         if (info.host === Office.HostType.Word) {
-            document.getElementById("helloButton").onclick = sayHello;
+            document.getElementById("analyzeBtn").onclick = analyzeFn;
         }
     });
 
-    function sayHello() {
-        return Word.run((context) => {
+    function analyzeFn() {
+        return Word.run(async (context) => {
+            let selection = context.document.getSelection();
+            selection.load("text");
 
-            // insert a paragraph at the start of the document.
-            const paragraph = context.document.body.insertParagraph("Hello World", Word.InsertLocation.start);
+            const selectedText = selection.text;
 
-            // sync the context to run the previous API call, and return.
+            document.getElementById('selectedText').textContent(selectedText || '');
+
+            if (selection.text.trim().length > 0) {
+                let response = await fetch("https://dummyjson.com/comments", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                let result = await response.text();
+                document.getElementById('apiResponse').textContent(JSON.stringify(response));
+            } else {
+                document.getElementById('apiResponse').textContent('Please, select a text.')
+            }
+
             return context.sync();
         });
     }
